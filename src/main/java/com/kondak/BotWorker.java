@@ -10,12 +10,6 @@ public class BotWorker {
     private DatabaseConnectionInfo info;
     private DatabaseWorker dbWorker;
 
-    private final String databaseAddress = "localhost";
-    private final String databasePort = "3306";//default port
-    private final String databaseName = "databaseName";
-    private final String databaseUsername = "login";
-    private final String databasePassword = "password";
-
     //commands supported by the bot:
     private final String searchCommandPattern = "search";
     private final String addCommandPattern = "add";
@@ -108,11 +102,7 @@ public class BotWorker {
     //initializes bot and default connection settings to database
     public BotWorker() {
         log("Started worker");
-        info = new DatabaseConnectionInfo(databaseAddress,
-                databasePort,
-                databaseUsername,
-                databasePassword,
-                databaseName);
+        info = new DatabaseConnectionInfo();
         log("Initialized database connection info");
         dbWorker = new DatabaseWorker(info);
         log("Connecting to database...");

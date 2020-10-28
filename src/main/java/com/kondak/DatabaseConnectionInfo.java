@@ -1,5 +1,9 @@
 package com.kondak;
 
+import java.io.FileInputStream;
+import java.io.IOException;
+import java.util.Properties;
+
 public class DatabaseConnectionInfo {
 
     private String address;
@@ -41,6 +45,22 @@ public class DatabaseConnectionInfo {
     }
 
     public DatabaseConnectionInfo() {
+        FileInputStream fis;
+        Properties property = new Properties();
+
+        try {
+            fis = new FileInputStream("src/main/resources/config.properties");
+            property.load(fis);
+
+            this.address = property.getProperty("db.address");
+            this.port = property.getProperty("db.port");
+            this.username = property.getProperty("db.username");
+            this.password = property.getProperty("db.password");
+            this.databaseName = property.getProperty("db.name");
+
+        } catch (IOException e) {
+            System.err.println("ERROR: Properties file is missing!");
+        }
     }
 
     public DatabaseConnectionInfo(String address, String port, String username, String password, String databaseName) {
