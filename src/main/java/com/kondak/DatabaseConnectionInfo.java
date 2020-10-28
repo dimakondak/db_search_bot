@@ -1,3 +1,5 @@
+package com.kondak;
+
 public class DatabaseConnectionInfo {
 
     private String address;

@@ -1,3 +1,5 @@
+package com.kondak;
+
 public class Starter {
     static BotWorker worker;
     //token issued by @BotFather when creating a bot
