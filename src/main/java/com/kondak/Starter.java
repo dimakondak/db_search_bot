@@ -13,8 +13,9 @@ public class Starter {
 
     public static void main(String[] args) {
         log("Starting BotWorker...");
-        //when creating a BotWorker, we pass it a token to initialize the bot
-        worker = new BotWorker(botToken);
+        worker = new BotWorker();
+        log("Initializing bot...");
+        worker.initializeBot(botToken);
         log("Well, now it seems to be work");
     }
 }

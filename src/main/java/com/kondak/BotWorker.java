@@ -88,9 +88,10 @@ public class BotWorker {
         return responseText;
     }
 
-    private void initializeBot(String token) {
+    public void initializeBot(String token) {
         bot = new TelegramBot(token);
 
+        // this lambda function is official way to set up listeners
         bot.setUpdatesListener(updates -> {
             Update lastUpdate = updates.get(updates.size() - 1);
             long chatId = lastUpdate.message().chat().id();
@@ -105,7 +106,7 @@ public class BotWorker {
     }
 
     //initializes bot and default connection settings to database
-    public BotWorker(String token) {
+    public BotWorker() {
         log("Started worker");
         info = new DatabaseConnectionInfo(databaseAddress,
                 databasePort,
@@ -116,8 +117,5 @@ public class BotWorker {
         dbWorker = new DatabaseWorker(info);
         log("Connecting to database...");
         dbWorker.connect();
-        log("Initializing bot...");
-        initializeBot(token);
-        log("Bot worker successfully initialized!");
     }
 }
