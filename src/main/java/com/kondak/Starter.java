@@ -1,21 +1,20 @@
 package com.kondak;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 public class Starter {
     static BotWorker worker;
     //token issued by @BotFather when creating a bot
     static String botToken = "token";
 
-    static String prefix = "[Starter]: ";
-
-    static void log(String text) {
-        System.out.println(prefix + text);
-    }
+    private static final Logger log = LogManager.getLogger();
 
     public static void main(String[] args) {
-        log("Starting BotWorker...");
+        log.info("Starting BotWorker...");
         worker = new BotWorker();
-        log("Initializing bot...");
+        log.info("Initializing bot...");
         worker.initializeBot(botToken);
-        log("Well, now it seems to be work");
+        log.info("Well, now it seems to be work");
     }
 }

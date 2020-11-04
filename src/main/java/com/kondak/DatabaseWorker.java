@@ -1,5 +1,8 @@
 package com.kondak;
 
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
+
 import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.ResultSet;
@@ -13,15 +16,10 @@ public class DatabaseWorker {
     Statement connectionStatement;
 
     static int expectedRowCount = 1;
-    static String prefix = "[DatabaseWorker]: ";
-
-
-    private void log(String text) {
-        System.out.println(prefix + text);
-    }
+    private static final Logger log = LogManager.getLogger();
 
     public DatabaseWorker(DatabaseConnectionInfo info) {
-        log("Database connection info retrieved!");
+        log.info("Database connection info retrieved!");
         this.info = info;
     }
 
@@ -39,11 +37,11 @@ public class DatabaseWorker {
             connectionStatement = connection.createStatement();
 
         } catch (SQLException e) {
-            log("Database connection failed");
-            log(e.getMessage());
+            log.fatal("Database connection failed");
+            log.fatal(e);
             return false;
         }
-        log("Successfully connected to database!");
+        log.info("Successfully connected to database!");
         return true;
     }
 
@@ -53,14 +51,14 @@ public class DatabaseWorker {
         Boolean result = false;
 
         String query = "INSERT INTO `Data`(`Name`, `Surname`, `Phone`) VALUES ('" + name + "','" + surname + "','" + Phone + "')";
-        log("Query to exec: " + query);
+        log.info("Query to exec: " + query);
 
         try {
             if (connectionStatement.executeUpdate(query) == expectedRowCount) //a single line append query has been sent, so we expect to see one line added
                 result = true;
         } catch (Exception e) {
-            log("Query execution fail!");
-            log(e.getMessage());
+            log.error("Query execution fail!");
+            log.error(e);
         }
 
         return result;
@@ -74,7 +72,7 @@ public class DatabaseWorker {
         if (!isConnected()) return "<No database connection>"; //this line is needed for the method to work ALWAYS
 
         String query = "SELECT * FROM Data WHERE Name LIKE '%" + pattern + "%' OR Surname LIKE '%" + pattern + "%' OR Phone LIKE '%" + pattern + "%'";
-        log("Query to exec: " + query);
+        log.info("Query to exec: " + query);
 
         try {
             ResultSet rs = connectionStatement.executeQuery(query);
@@ -85,8 +83,8 @@ public class DatabaseWorker {
                         rs.getString(4) + "\n";
             }
         } catch (Exception e) {
-            log("Query execution fail!");
-            log(e.getMessage());
+            log.error("Query execution fail!");
+            log.error(e);
         }
 
         return result;

@@ -4,6 +4,8 @@ import com.pengrad.telegrambot.TelegramBot;
 import com.pengrad.telegrambot.UpdatesListener;
 import com.pengrad.telegrambot.model.Update;
 import com.pengrad.telegrambot.request.SendMessage;
+import org.apache.logging.log4j.LogManager;
+import org.apache.logging.log4j.Logger;
 
 public class BotWorker {
     private TelegramBot bot;
@@ -18,17 +20,13 @@ public class BotWorker {
     private final int surname = 1;
     private final int phone = 2;
 
-    static String prefix = "[Worker]: ";
-
-    private void log(String text) {
-        System.out.println(prefix + text);
-    }
+    private static final Logger log = LogManager.getLogger();
 
     //by the keyword "search" the method searches the database and returns a string with the search results
     private String executeSearch(String message) {
         String patternToSearch = message.replaceFirst(searchCommandPattern, "").trim(); //separating a pattern to search from the keyword
 
-        log(("Pattern length: " + patternToSearch.length()));
+        log.info("Pattern length: " + patternToSearch.length());
 
         String result = dbWorker.search(patternToSearch); //transfer the pattern to search to the worker with the database
 
@@ -46,7 +44,7 @@ public class BotWorker {
 
         Boolean executionResultSuccessful = false;
 
-        log("Got " + userInfo.length + " values");
+        log.info("Got " + userInfo.length + " values");
 
         //Since the bot database has three main columns, it requires three user information to correctly add a user to the database.
         if (userInfo.length == 3)
@@ -71,7 +69,7 @@ public class BotWorker {
 
     //actions that will be performed depending on a specific command
     private String checkResponse(String messageText) {
-        log("Message: " + messageText);
+        log.info("Message: " + messageText);
         String responseText = "Haha!";
         if (messageText.contains("help"))
             responseText = printHelp();
@@ -90,22 +88,22 @@ public class BotWorker {
             Update lastUpdate = updates.get(updates.size() - 1);
             long chatId = lastUpdate.message().chat().id();
             String message = lastUpdate.message().text();
-            log("New message from " + lastUpdate.message().from().username());
+            log.info("New message from " + lastUpdate.message().from().username());
             //setting a method with commands available to the bot
             bot.execute(new SendMessage(chatId, checkResponse(message)));
             return UpdatesListener.CONFIRMED_UPDATES_ALL;
         });
 
-        log("Bot initialized");
+        log.info("Bot initialized");
     }
 
     //initializes bot and default connection settings to database
     public BotWorker() {
-        log("Started worker");
+        log.info("Started worker");
         info = new DatabaseConnectionInfo();
-        log("Initialized database connection info");
+        log.info("Initialized database connection info");
         dbWorker = new DatabaseWorker(info);
-        log("Connecting to database...");
+        log.info("Connecting to database...");
         dbWorker.connect();
     }
 }
